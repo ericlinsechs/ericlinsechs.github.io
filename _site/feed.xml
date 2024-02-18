@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    
+    <title>Eric Lin</title>
+    
+    
+    <description>This website is a virtual proof that I&apos;m awesome</description>
+    
+    <link>http://localhost:4000/</link>
+    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
+    
+    
+      <item>
+        <title>How to Build Linux kernel for BeagleBone Black</title>
+        <description>
+          
+          In this tutorial, we’ll walk you through the process of building a custom Linux kernel tailored specifically for the BeagleBone Black platform. By following these steps, you’ll be able to create a customized embedded Linux distribution optimized for your project’s requirements. Pre-requisite Host Machine Environment $ uname -a Linux elinlinux...
+        </description>
+        <pubDate>Tue, 06 Feb 2024 00:00:00 -0500</pubDate>
+        <link>http://localhost:4000/2024-02-06-How-to-Build-Linux-kernel-for-BeagleBone-Black/</link>
+        <guid isPermaLink="true">http://localhost:4000/2024-02-06-How-to-Build-Linux-kernel-for-BeagleBone-Black/</guid>
+      </item>
+    
+      <item>
+        <title>Leetcode 1. Two sum solution</title>
+        <description>
+          
+          In this post, we’ll discover the power of hash tables in solving LeetCode’s Two sum problem. Aim Implements hashtables to solve Two sum. Understand how the hashtables are implemented in Linux. Hash struct introduction source: 2022q1 第 1 週測驗題 The hash table is implemented using a non-circular doubly-linked list structure,...
+        </description>
+        <pubDate>Thu, 23 Nov 2023 00:00:00 -0500</pubDate>
+        <link>http://localhost:4000/2023-11-23-Leetcode-1.-Two-sum-solution/</link>
+        <guid isPermaLink="true">http://localhost:4000/2023-11-23-Leetcode-1.-Two-sum-solution/</guid>
+      </item>
+    
+  </channel>
+</rss>
