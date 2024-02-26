@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- Beautiful Jekyll 6.0.1 | Copyright Dean Attali 2023 -->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  
+
+  
+
+  
+
+  <title>Build Linux Distribution for NXP i.MX 8 with Yocto Project | Eric Lin</title>
+
+  
+  
+  <meta name="author" content="Eric Lin">
+  
+
+  <meta name="description" content="Welcome to our guide on building a custom Linux distribution for the NXP i.MX 8 platform using the Yocto Project. Throughout this blog, you’ll learn everything from setting up your development environment to deploying the final image. Let’s dive in! Prerequisites Before diving into the process, it’s essential to ensure...">
+
+  
+
+  
+
+  
+  <link rel="alternate" type="application/rss+xml" title="Eric Lin" href="http://localhost:4000/feed.xml">
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+    
+      
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+
+    
+      
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+
+
+    
+      
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic">
+
+
+    
+      
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800">
+
+
+    
+  
+
+  
+    
+      <link rel="stylesheet" href="/assets/css/bootstrap-social.css">
+    
+      <link rel="stylesheet" href="/assets/css/beautifuljekyll.css">
+    
+  
+
+  
+
+  
+  
+  
+
+  
+
+  
+  <meta property="og:site_name" content="Eric Lin">
+  <meta property="og:title" content="Build Linux Distribution for NXP i.MX 8 with Yocto Project | Eric Lin">
+  <meta property="og:description" content="Welcome to our guide on building a custom Linux distribution for the NXP i.MX 8 platform using the Yocto Project. Throughout this blog, you’ll learn everything from setting up your development environment to deploying the final image. Let’s dive in! Prerequisites Before diving into the process, it’s essential to ensure...">
+
+  
+  <meta property="og:image" content="http://localhost:4000/assets/img/eric.jpeg">
+  
+
+  
+  <meta property="og:type" content="article">
+  
+  <meta property="og:article:author" content="Eric Lin">
+  
+  <meta property="og:article:published_time" content="2024-02-26T00:00:00-05:00">
+  <meta property="og:url" content="http://localhost:4000/2024-02-26-Build-Linux-Distribution-for-NXP-iMX-8-with-Yocto-Project/">
+  <link rel="canonical" href="http://localhost:4000/2024-02-26-Build-Linux-Distribution-for-NXP-iMX-8-with-Yocto-Project/">
+  
+
+  
+  <meta name="twitter:card" content="summary">
+  
+  <meta name="twitter:site" content="@">
+  <meta name="twitter:creator" content="@">
+
+  <meta property="twitter:title" content="Build Linux Distribution for NXP i.MX 8 with Yocto Project | Eric Lin">
+  <meta property="twitter:description" content="Welcome to our guide on building a custom Linux distribution for the NXP i.MX 8 platform using the Yocto Project. Throughout this blog, you’ll learn everything from setting up your development environment to deploying the final image. Let’s dive in! Prerequisites Before diving into the process, it’s essential to ensure...">
+
+  
+  <meta name="twitter:image" content="http://localhost:4000/assets/img/eric.jpeg">
+  
+
+  
+
+
+  
+
+  
+  
+
+  
+
+</head>
+
+
+<body>
+  
+
+
+  <nav class="navbar navbar-expand-xl navbar-light fixed-top navbar-custom top-nav-regular"><a class="navbar-brand" href="http://localhost:4000/">Eric Lin</a><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="main-navbar">
+    <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Blog</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/aboutme">About Me</a>
+          </li>
+        <li class="nav-item">
+          <a class="nav-link" id="nav-search-link" href="#" title="Search">
+            <span id="nav-search-icon" class="fa fa-search"></span>
+            <span id="nav-search-text">Search</span>
+          </a>
+        </li></ul>
+  </div>
+
+  
+
+  
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        <a href="http://localhost:4000/">
+          <img alt="Navigation bar avatar" class="avatar-img" src="/assets/img/eric.jpeg" />
+        </a>
+      </div>
+    </div>
+  
+
+</nav>
+
+
+
+<div id="beautifuljekyll-search-overlay">
+
+  <div id="nav-search-exit" title="Exit search">✕</div>
+  <input type="text" id="nav-search-input" placeholder="Search">
+  <ul id="search-results-container"></ul>
+  
+  <script src="https://unpkg.com/simple-jekyll-search@latest/dest/simple-jekyll-search.min.js"></script>
+  <script>
+    var searchjson = '[ \
+       \
+        { \
+          "title"    : "Build Linux Distribution for NXP i.MX 8 with Yocto Project", \
+          "desc"     : "Build Linux Distribution for NXP i.MX 8 with Yocto Project", \
+          "category" : "", \
+          "url"      : "/2024-02-26-Build-Linux-Distribution-for-NXP-iMX-8-with-Yocto-Project/", \
+          "date"     : "February 26, 2024" \
+        }, \
+       \
+        { \
+          "title"    : "How to Build Linux kernel for BeagleBone Black", \
+          "desc"     : "How to Build Linux kernel for BeagleBone Black", \
+          "category" : "", \
+          "url"      : "/2024-02-06-How-to-Build-Linux-kernel-for-BeagleBone-Black/", \
+          "date"     : "February  6, 2024" \
+        }, \
+       \
+        { \
+          "title"    : "Leetcode 1. Two sum solution", \
+          "desc"     : "Leetcode 1. Two sum solution", \
+          "category" : "", \
+          "url"      : "/2023-11-23-Leetcode-1.-Two-sum-solution/", \
+          "date"     : "November 23, 2023" \
+        }, \
+       \
+       \
+        { \
+          "title"    : "About me", \
+          "desc"     : "About me", \
+          "category" : "page", \
+          "url"      : "/aboutme/", \
+          "date"     : "January 1, 1970" \
+        }, \
+       \
+        { \
+          "title"    : "Hi, I&#39;m Eric", \
+          "desc"     : "Hi, I&#39;m Eric", \
+          "category" : "page", \
+          "url"      : "/", \
+          "date"     : "January 1, 1970" \
+        }, \
+       \
+        { \
+          "title"    : "Tag Index", \
+          "desc"     : "Tag Index", \
+          "category" : "page", \
+          "url"      : "/tags/", \
+          "date"     : "January 1, 1970" \
+        } \
+       \
+    ]';
+    searchjson = JSON.parse(searchjson);
+
+    var sjs = SimpleJekyllSearch({
+      searchInput: document.getElementById('nav-search-input'),
+      resultsContainer: document.getElementById('search-results-container'),
+      json: searchjson
+    });
+  </script>
+</div>
+
+
+
+
+
+  
+
+
+
+<header class="header-section ">
+<div class="intro-header ">
+  
+  <div class="container-md">
+    <div class="row">
+      <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
+        <div class="post-heading">
+          <h1>Build Linux Distribution for NXP i.MX 8 with Yocto Project</h1>
+          
+          
+           
+            
+            <span class="post-meta">Posted on February 26, 2024</span>
+            
+            
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+</div>
+
+
+
+</header>
+
+
+<main class=" container-md ">
+  <div class="row">
+    <div class=" col-xl-8 offset-xl-2 col-lg-10 offset-lg-1 ">
+
+      
+
+      
+
+      <div class="blog-post">
+        <p>Welcome to our guide on building a custom Linux distribution for the NXP i.MX 8 platform using the Yocto Project. Throughout this blog, you’ll learn everything from setting up your development environment to deploying the final image. Let’s dive in!</p>
+
+<h2 id="prerequisites">Prerequisites</h2>
+<p>Before diving into the process, it’s essential to ensure that your development environment meets the necessary prerequisites. The following requirements should be in place:</p>
+
+<h3 id="hardware">Hardware</h3>
+<p>To follow along, you’ll need the i.MX 8QuadMax Multisensory Enablement Kit (MEK), which serves as our reference hardware platform. You can find more information and acquire the kit from <a href="https://www.nxp.com/design/design-center/development-boards/i-mx-evaluation-and-development-boards/i-mx-8quadmax-multisensory-enablement-kit-mek:MCIMX8QM-CPU">here</a>.</p>
+
+<h3 id="software">Software</h3>
+<p>Ensure you have the necessary software dependencies installed:</p>
+<ul>
+  <li>Choose a Yocto release based on your demand. Please check <a href="https://wiki.yoctoproject.org/wiki/Releases">Yocto Releases</a> for more details.</li>
+  <li>Prepare your build host. Please see <a href="https://docs.yoctoproject.org/brief-yoctoprojectqs/index.html#compatible-linux-distribution">Yocto Project Quick Build</a> and <a href="https://docs.yoctoproject.org/ref-manual/system-requirements.html#system-requirements">System Requirements</a> for more info.</li>
+</ul>
+
+<h3 id="my-build-host-environment">My build host environment</h3>
+<p>Here’s an example of the software environment I’m using for this guide:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ gcc --version
+gcc (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0
+
+$ make --version
+GNU Make 4.2.1
+Built for x86_64-pc-linux-gnu
+
+$ python -V
+Python 3.8.10
+
+$ git --version
+git version 2.25.1
+
+$ lsb_release -a
+Distributor ID: Ubuntu
+Description:    Ubuntu 20.04.4 LTS
+Release:        20.04
+Codename:       focal
+
+$ lscpu
+Architecture:                       x86_64
+CPU op-mode(s):                     32-bit, 64-bit
+Byte Order:                         Little Endian
+Address sizes:                      46 bits physical, 48 bits virtual
+CPU(s):                             224
+On-line CPU(s) list:                0-223
+Thread(s) per core:                 2
+Core(s) per socket:                 28
+Socket(s):                          4
+NUMA node(s):                       4
+Vendor ID:                          GenuineIntel
+CPU family:                         6
+Model:                              85
+Model name:                         Intel(R) Xeon(R) Platinum 8180 CPU @ 2.50GHz
+</code></pre></div></div>
+
+<h2 id="host-setup">Host Setup</h2>
+
+<h3 id="build-host-packages">Build Host Packages</h3>
+<p>Install essential host packages on your build host using the following command:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt install gawk wget git diffstat unzip texinfo gcc build-essential chrpath socat cpio python3 python3-pip python3-pexpect xz-utils debianutils iputils-ping python3-git python3-jinja2 libegl1-mesa libsdl1.2-dev python3-subunit mesa-common-dev zstd liblz4-tool file locales libacl1
+
+sudo locale-gen en_US.UTF-8
+</code></pre></div></div>
+
+<blockquote>
+  <p>For more specific package requirements, refer to the <a href="https://docs.yoctoproject.org/brief-yoctoprojectqs/index.html#compatible-linux-distribution">Yocto Project Quick Build</a>.</p>
+</blockquote>
+
+<h3 id="setting-up-the-repo-utility">Setting up the Repo utility</h3>
+
+<h4 id="repo">Repo</h4>
+<p>Repo is a tool built on top of Git, designed to manage multiple Git repositories, streamline uploads to revision control systems, and automate parts of the development workflow.</p>
+
+<h4 id="yocto-with-repo">Yocto with Repo</h4>
+<p>Yocto leverages the Google repo tool to simplify fetching sources and setting up the build environment. It allows Yocto fetching sources from multiple location in a single command based on manifest files (xml).</p>
+
+<h4 id="install">Install</h4>
+<p>Install the “repo” utility, perform these steps:</p>
+<ol>
+  <li>
+    <p>Create a directory for the utility:</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nb">mkdir</span> ~/bin
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Download the <code class="language-plaintext highlighter-rouge">repo</code> utility:</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl https://storage.googleapis.com/git-repo-downloads/repo-1 <span class="o">&gt;</span> ~/bin/repo
+<span class="nb">chmod </span>a+x ~/bin/repo
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Update environment variables:</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span>~/bin:<span class="nv">$PATH</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="yocto-project-setup">Yocto Project Setup</h2>
+<p>Create a directory called <code class="language-plaintext highlighter-rouge">imx-yocto-bsp</code> for the project:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir imx-yocto-bsp
+cd imx-yocto-bsp
+</code></pre></div></div>
+
+<p><a href="https://github.com/nxp-imx/imx-manifest">i.MX Repo Manifest</a> is used to download manifests for i.MX BSP releases. Fetch the manifest for your desired release:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>repo init -u https://github.com/nxp-imx/imx-manifest -b &lt;branch name&gt; [ -m &lt;release manifest&gt;]
+</code></pre></div></div>
+<blockquote>
+  <p>For more details, go check <a href="https://github.com/nxp-imx/imx-manifest?tab=readme-ov-file#imx-repo-manifest-readme">i.MX Repo Manifest README</a></p>
+</blockquote>
+
+<p>In my case, I choose branch <code class="language-plaintext highlighter-rouge">kirkstone</code> and manifest <code class="language-plaintext highlighter-rouge">imx-5.15.71-2.2.0</code>:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>repo init -u https://github.com/nxp-imx/imx-manifest -b imx-linux-kirkstone -m imx-5.15.71-2.2.0.xml
+</code></pre></div></div>
+<blockquote>
+  <p>If errors occur during Repo initialization, try deleting the <code class="language-plaintext highlighter-rouge">.repo</code> directory and running the Repo initialization command again.</p>
+</blockquote>
+
+<p>Perform Repo synchronization, with the command periodically to update to the latest code:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>repo sync
+</code></pre></div></div>
+
+<h3 id="repo-sync-error"><code class="language-plaintext highlighter-rouge">repo sync</code> error</h3>
+<p>If <code class="language-plaintext highlighter-rouge">repo sync</code> fails to clone recipes:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rm -rf [package path]
+repo sync -f [package path]
+</code></pre></div></div>
+
+<h2 id="image-build">Image Build</h2>
+
+<h3 id="setup-the-build-folder-for-a-bsp-release">Setup the build folder for a BSP release</h3>
+<p>i.MX provides a script, <code class="language-plaintext highlighter-rouge">imx-setup-release.sh</code>, that simplifies the setup for i.MX machines. To use the script,
+the name of the specific machine to be built for needs to be specified as well as the desired graphical backend.</p>
+
+<p>The syntax for the imx-setup-release.sh script is shown below:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$: [MACHINE=&lt;machine&gt;] [DISTRO=fsl-imx-&lt;backend&gt;] source ./imx-setup-release.sh -b &lt;build dir&gt;
+
+&lt;machine&gt;   defaults to `imx6qsabresd`
+&lt;backend&gt;   Graphics backend type
+    xwayland    Wayland with X11 support - default distro
+    wayland     Wayland
+    fb          Framebuffer (not supported for mx8)
+</code></pre></div></div>
+
+<p>Example setup for XWayland and i.MX8QM:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>DISTRO=fsl-imx-xwayland MACHINE=imx8qmmek source imx-setup-release.sh -b ./build
+</code></pre></div></div>
+<blockquote>
+  <p>For more setting options, please see <a href="https://github.com/nxp-imx/imx-manifest?tab=readme-ov-file#setup-the-build-folder-for-a-bsp-release">i.MX Repo Manifest README</a> and <a href="https://www.nxp.com/docs/en/user-guide/IMX_YOCTO_PROJECT_USERS_GUIDE.pdf">i.MX Yocto Project User’s Guide: Image Build</a> for further instructions.</p>
+</blockquote>
+
+<h3 id="build-an-image">Build an image</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bitbake &lt;image recipe&gt;
+</code></pre></div></div>
+<p>A table lists various image recipes can be found in <a href="https://www.nxp.com/docs/en/user-guide/IMX_YOCTO_PROJECT_USERS_GUIDE.pdf">i.MX Yocto Project User’s Guide: 5.2 Choosing an i.MX Yocto project image</a></p>
+
+<p>An example on building an image:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bitbake core-image-base
+</code></pre></div></div>
+
+<h3 id="bitbake-error"><code class="language-plaintext highlighter-rouge">Bitbake</code> error</h3>
+<p>Here are some errors you might encounter when building image uses the bitbake command.</p>
+
+<h4 id="do_fetch-bitbake-fetcher-error-fetcherror"><code class="language-plaintext highlighter-rouge">do_fetch: Bitbake Fetcher Error: FetchError</code></h4>
+<ul>
+  <li>Check if the remote branch exists.</li>
+  <li>Copy the <code class="language-plaintext highlighter-rouge">git clone</code> command from log and exec it manually.</li>
+  <li>Run <code class="language-plaintext highlighter-rouge">bitbake [pkg name]</code></li>
+  <li>Increase git buffer
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git config --global http.postBuffer 1048576000
+</code></pre></div>    </div>
+  </li>
+  <li>For poor network connection:
+The example means the remote action will block when the speed kept below 1KB/s for 600 seconds(10min):
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git config --global http.lowSpeedLimit 1000
+git config --global http.lowSpeedTime 600
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h4 id="error-rpc-failed-curl-18-transfer-closed-with-outstanding-read-data-remaining"><code class="language-plaintext highlighter-rouge">error: RPC failed; curl 18 transfer closed with outstanding read data remaining</code></h4>
+<p>Switch remote URLs from HTTPS to SSH</p>
+<ul>
+  <li>First, generate an SSH key. Refer <a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#generating-a-new-ssh-key">Generating a new SSH key and adding it to the ssh-agent</a>.</li>
+  <li>Then, test your SSH connection. Refer <a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/testing-your-ssh-connection">Testing your SSH connection</a>.</li>
+  <li>Clone repositories using SSH:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone git@github.com:OWNER/REPOSITORY.git
+</code></pre></div>    </div>
+    <blockquote>
+      <p>Please check <a href="https://docs.github.com/en/get-started/getting-started-with-git/managing-remote-repositories#switching-remote-urls-from-https-to-ssh">Managing remote repositories</a> for more details.</p>
+    </blockquote>
+  </li>
+</ul>
+
+<h2 id="image-deployment">Image Deployment</h2>
+<p>Complete filesystem images are deployed to<code class="language-plaintext highlighter-rouge"> &lt;build directory&gt;/tmp/deploy/images</code>.  Most machine configurations provide an SD card image (.wic) and a rootfs image (.tar). The SD card image contains a partitioned image (with U-Boot, kernel, rootfs, etc.) suitable for booting the corresponding hardware.</p>
+
+<p>Go to image directory:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd tmp/deploy/images/imx8qmmek
+</code></pre></div></div>
+
+<h3 id="flash-an-sd-card-image">Flash an SD card image</h3>
+<p>An SD card image file .wic contains a partitioned image (with U-Boot, kernel, rootfs, etc.) suitable for booting the corresponding hardware. To flash an SD card image, run the following command:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>zstdcat &lt;image_name&gt;.wic.zst | sudo dd of=/dev/sd&lt;partition&gt; bs=1M conv=fsync &amp;&amp; sync
+</code></pre></div></div>
+<blockquote>
+  <p>Please see <a href="https://www.nxp.com/docs/en/user-guide/IMX_YOCTO_PROJECT_USERS_GUIDE.pdf">i.MX Yocto Project User’s Guide: 6 Image Deployment</a> for more information.</p>
+</blockquote>
+
+<h2 id="boot-result">Boot Result</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[  OK  ] Started User Login Management.
+[  OK  ] Created slice Slice /system/systemd-backlight.
+[  OK  ] Reached target Network.
+[  OK  ] Reached target Host and Network Name Lookups.
+[  OK  ] Reached target Hardware activated USB gadget.
+         Starting Save/Restore Sound Card State...
+         Starting Avahi mDNS/DNS-SD Stack...
+         Starting Load/Save Screen … backlight:lvds_backlight@0...
+         Starting Load/Save Screen … backlight:lvds_backlight@1...
+         Starting Permit User Sessions...
+[  OK  ] Finished Save/Restore Sound Card State.
+[  OK  ] Finished Load/Save Screen …of backlight:lvds_backlight@0.
+[  OK  ] Finished Load/Save Screen …of backlight:lvds_backlight@1.
+[  OK  ] Finished Permit User Sessions.
+[  OK  ] Started Avahi mDNS/DNS-SD Stack.
+[  OK  ] Reached target Sound Card.
+[  OK  ] Started Getty on tty1.
+[  OK  ] Started Serial Getty on ttyLP0.
+[  OK  ] Reached target Login Prompts.
+[  OK  ] Reached target Multi-User System.
+         Starting Record Runlevel Change in UTMP...
+[  OK  ] Finished Record Runlevel Change in UTMP.
+
+
+NXP i.MX Release Distro 5.15-kirkstone imx8qmmek ttyLP0
+
+imx8qmmek login: root
+root@imx8qmmek:~#
+</code></pre></div></div>
+
+<h2 id="reference">Reference</h2>
+<ul>
+  <li><a href="https://www.nxp.com/docs/en/user-guide/IMX_YOCTO_PROJECT_USERS_GUIDE.pdf">i.MX Yocto Project User’s Guide</a></li>
+  <li><a href="https://docs.yoctoproject.org/4.3.2/index.html">Yocto Project Documentation</a></li>
+  <li><a href="https://docs.yoctoproject.org/bitbake/bitbake-user-manual/bitbake-user-manual-intro.html#concepts">bitbake user manual intro</a></li>
+  <li><a href="https://stackoverflow.com/questions/38618885/error-rpc-failed-curl-transfer-closed-with-outstanding-read-data-remaining">error: RPC failed; curl transfer closed with outstanding read data remaining</a></li>
+</ul>
+
+      </div>
+
+      
+
+      
+
+      
+        <!-- Check if any share-links are active -->
+
+
+
+
+<section id = "social-share-section">
+  <span class="sr-only">Share: </span>
+
+  
+    <a href="https://twitter.com/intent/tweet?text=Build+Linux+Distribution+for+NXP+i.MX+8+with+Yocto+Project&url=http%3A%2F%2Flocalhost%3A4000%2F2024-02-26-Build-Linux-Distribution-for-NXP-iMX-8-with-Yocto-Project%2F"
+      class="btn btn-social-icon btn-twitter" title="Share on Twitter">
+      <span class="fab fa-fw fa-twitter" aria-hidden="true"></span>
+      <span class="sr-only">Twitter</span>
+    </a>
+  
+
+  
+    <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2F2024-02-26-Build-Linux-Distribution-for-NXP-iMX-8-with-Yocto-Project%2F"
+      class="btn btn-social-icon btn-facebook" title="Share on Facebook">
+      <span class="fab fa-fw fa-facebook" aria-hidden="true"></span>
+      <span class="sr-only">Facebook</span>
+    </a>
+  
+
+  
+    <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2F2024-02-26-Build-Linux-Distribution-for-NXP-iMX-8-with-Yocto-Project%2F"
+      class="btn btn-social-icon btn-linkedin" title="Share on LinkedIn">
+      <span class="fab fa-fw fa-linkedin" aria-hidden="true"></span>
+      <span class="sr-only">LinkedIn</span>
+    </a>
+  
+
+  
+
+  
+
+</section>
+
+
+
+      
+
+      <ul class="pagination blog-pager">
+        
+        <li class="page-item previous">
+          <a class="page-link" href="/2024-02-06-How-to-Build-Linux-kernel-for-BeagleBone-Black/" data-toggle="tooltip" data-placement="top" title="How to Build Linux kernel for BeagleBone Black">
+            <i class="fas fa-arrow-left" alt="Previous Post"></i>
+            <span class="d-none d-sm-inline-block">Previous Post</span>
+          </a>
+        </li>
+        
+        
+      </ul>
+      
+  
+  
+  
+
+  
+
+
+  
+
+  
+
+
+
+    </div>
+  </div>
+</main>
+
+
+  <footer>
+  <div class="container-md beautiful-jekyll-footer">
+    <div class="row">
+      <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
+      
+<ul class="list-inline text-center footer-links"><li class="list-inline-item">
+    <a href="mailto:ericlinsechs@gmail.com" title="Email me">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">Email me</span>
+   </a>
+  </li><li class="list-inline-item">
+    <a href="https://github.com/ericlinsechs" title="GitHub">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">GitHub</span>
+   </a>
+  </li><li class="list-inline-item">
+    <a href="https://linkedin.com/in/eric-lin-a8a187248" title="LinkedIn">
+      <span class="fa-stack fa-lg" aria-hidden="true">
+        <i class="fas fa-circle fa-stack-2x"></i>
+        <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">LinkedIn</span>
+   </a>
+  </li></ul>
+
+      
+      <p class="copyright text-muted">
+      
+        Eric Lin
+        &nbsp;&bull;&nbsp;
+      
+      2024
+
+      
+
+      
+
+      
+
+      </p>
+      <p class="theme-by text-muted">
+        Powered by
+        <a href="https://beautifuljekyll.com">Beautiful Jekyll</a>
+      </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  
+  
+    
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
+
+
+  
+    
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+
+  
+    
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+
+  
+
+
+
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+      <script src="/assets/js/beautifuljekyll.js"></script>
+    
+  
+
+
+
+
+
+
+
+
+
+</body>
+</html>
